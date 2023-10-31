@@ -1,5 +1,5 @@
 const express = require("express");
-
+const cors = require('cors');
 const app = express();
 const dbConnection = require("./db")
 const usersRoute = require("./routes/usersRoute")
@@ -14,13 +14,22 @@ const port = process.env.PORT || 5000;
 
 if(process.env.NODE_ENV === 'production')
 {
-    app.use('/' , express.static('client/build'))
+    
+//    app.use('/' , express.static('client/build'))
+/////////
+app.use(cors({
+    origin: 'https://profound-medovik-b95ea9.netlify.app', // Allow requests from your local frontend
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+  }));
+  app.get('/', (req, res) => {
+    res.send('Hello, World!');
+  });
 
-    app.get("*", (req, res) => {
-
-        res.sendFile(path.resolve(__dirname, 'client/build/index.html'));
-      
-    });
+//////////
+   // app.get("*", (req, res) => {
+     //   res.sendFile(path.resolve(__dirname, 'client/build/index.html'));
+  //  });
 }
 
 app.listen(port, () => console.log(`Server running on port ${port} 🔥`));
